@@ -20,8 +20,8 @@ class OcrService {
     final Uint8List pixels = _convertYuv420(image);
     final flat = pixels.toList(); // flatten
     final inputOrt = OrtValueTensor.createTensorWithDataList(flat, [1, 384, 384, 3]);
-    final outputs = _session.run([inputOrt], ['output']);
-    final text = outputs.first.value.toString();
+    final outputs = _session.run({'input': inputOrt}, ['output']);
+    final text = outputs['output']?.value.toString() ?? '';
     return text.replaceAll(RegExp(r'[^0-9.]'), '');
   }
 
