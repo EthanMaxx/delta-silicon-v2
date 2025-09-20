@@ -18,7 +18,7 @@ dependencies:
   flutter_tts: ^3.8.5
   shared_preferences: ^2.3.3
   http: ^1.2.1
-  onnxruntime: ^1.3.0
+  onnxruntime: ^1.3.0  # Add this line for ONNX Runtime
   flutter_localizations:
     sdk: flutter
   intl: any
@@ -31,6 +31,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/models/
+    - assets/models/trocr-small-int8.onnx  # Add this line to include the TrOCR model
     - assets/docs/
     - assets/l10n/
