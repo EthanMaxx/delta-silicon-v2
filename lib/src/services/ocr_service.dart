@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
@@ -6,12 +5,10 @@ import 'package:onnxruntime/onnxruntime.dart';
 
 class OcrService {
   late OrtSession _session;
-  late OrtEnvironment _env;
   bool _initialized = false;
 
   Future<void> init() async {
     if (_initialized) return;
-    _env = OrtEnvironment.instance;
     final raw = await rootBundle.load('assets/models/trocr-small-int8.onnx');
     final bytes = raw.buffer.asUint8List();
     _session = OrtSession.fromBuffer(bytes, OrtSessionOptions());
@@ -21,9 +18,10 @@ class OcrService {
   Future<String> recognize(CameraImage image) async {
     if (!_initialized) await init();
     final Uint8List pixels = _convertYuv420(image);
-    final inputOrt = OrtValueTensor.createTensorWithDataList(
-        pixels.reshape([1, 384, 384, 3]), [1, 384, 384, 3]);
-    final outputs = _session.run([inputOrt]);
+    final flat = pixels.toList();
+    final inputOrt = OrtValueTensor.createTensorWithDataList(flat, [1, 384, 384, 3]);
+    final runOptions = OrtRunOptions();
+    final outputs = _session.run([inputOrt], runOptions);
     final text = outputs.first.value.toString();
     return text.replaceAll(RegExp(r'[^0-9.]'), '');
   }
