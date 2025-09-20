@@ -13,7 +13,7 @@ class DeltaApp extends StatelessWidget {
       title: 'Δ-Silicon',
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.teal),
       home: const Scaffold(
-        body: Center(child: Text('Step 0 ✅ – Codespaces Ready')),
+        body: Center(child: Text('Step 2 ✅ – Fresh Android v2 Ready')),
       ),
     );
   }
