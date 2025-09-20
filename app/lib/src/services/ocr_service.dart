@@ -18,10 +18,12 @@ class OcrService {
   Future<String> recognize(CameraImage image) async {
     if (!_initialized) await init();
     final Uint8List pixels = _convertYuv420(image);
-    final flat = pixels.toList(); // flatten
+    final flat = pixels.toList();
     final inputOrt = OrtValueTensor.createTensorWithDataList(flat, [1, 384, 384, 3]);
-    final outputs = _session.run({'input': inputOrt}, ['output']);
-    final text = outputs['output']?.value.toString() ?? '';
+    final ortRunOptions = OrtRunOptions();
+    final outputs = _session.run([inputOrt], ortRunOptions);
+    final outputTensor = outputs.first as OrtValueTensor;
+    final text = outputTensor.value.toString();
     return text.replaceAll(RegExp(r'[^0-9.]'), '');
   }
 
