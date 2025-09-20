@@ -21,9 +21,9 @@ class OcrService {
     final flat = pixels.toList();
     final inputOrt = OrtValueTensor.createTensorWithDataList(flat, [1, 384, 384, 3]);
     final ortRunOptions = OrtRunOptions();
-    final outputs = _session.run([inputOrt], ortRunOptions);
-    final outputTensor = outputs.first as OrtValueTensor;
-    final text = outputTensor.value.toString();
+    final outputs = _session.run({'input': inputOrt}, ortRunOptions);
+    final outputTensor = outputs['output'] as OrtValueTensor?;
+    final text = outputTensor?.value.toString() ?? '';
     return text.replaceAll(RegExp(r'[^0-9.]'), '');
   }
 
